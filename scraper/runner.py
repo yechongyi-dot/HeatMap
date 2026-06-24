@@ -10,7 +10,7 @@ from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone, timedelta
 
-from scraper import youtube, niconico
+from scraper import youtube, niconico, official
 from scraper.scorer import score_and_rank
 from scraper.dedup import deduplicate
 from db import store
@@ -22,6 +22,7 @@ JST = timezone(timedelta(hours=9))
 PLATFORM_SCRAPERS: dict[str, Callable[[], list[dict]]] = {
     "youtube": youtube.scrape_all,
     "niconico": niconico.scrape_all_keywords,
+    "official": official.scrape_all,
 }
 
 
@@ -94,7 +95,7 @@ def run_all(progress: Callable[[dict], None] | None = None) -> dict[str, bool]:
     store.init()
     results: dict[str, bool] = {}
 
-    with ThreadPoolExecutor(max_workers=2) as pool:
+    with ThreadPoolExecutor(max_workers=len(PLATFORM_SCRAPERS)) as pool:
         futures = {
             pool.submit(run_platform, platform, progress): platform
             for platform in PLATFORM_SCRAPERS

@@ -7,8 +7,8 @@ import { startDownload } from '../downloads.js';
 import { VideoCard } from '../components/VideoCard.js';
 import { SelectionBar } from '../components/SelectionBar.js';
 
-const PLATS = [['youtube', 'YouTube'], ['niconico', 'ニコニコ']];
-const WINS = [['24h', '24小时'], ['3d', '3天'], ['7d', '7天']];
+const PLATS = [['youtube', 'YouTube'], ['official', '官方'], ['niconico', 'ニコニコ']];
+const WINS = [['24h', '24小时'], ['3d', '3天'], ['7d', '7天'], ['30d', '30天']];
 const SORTS = [
   ['score', '热度'], ['views', '播放量'], ['likes', '点赞'],
   ['comments', '评论'], ['duration', '时长'], ['date', '最新'],

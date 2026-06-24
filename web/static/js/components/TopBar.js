@@ -1,7 +1,7 @@
 import { html } from '/static/vendor/preact-standalone.module.js';
 
 const PHASE = { scraping: '采集', dedup: '去重', saving: '入库', done: '✓', failed: '✕' };
-const SHORT = { youtube: 'YouTube', niconico: 'ニコ' };
+const SHORT = { youtube: 'YouTube', official: '官方', niconico: 'ニコ' };
 
 function ScrapeChip({ scrape }) {
   const parts = Object.keys(scrape.platforms).map((p) => {

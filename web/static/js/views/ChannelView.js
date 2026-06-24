@@ -3,8 +3,8 @@ import { useState, useEffect, useMemo } from '/static/vendor/preact-standalone.m
 import { api } from '../api.js';
 import { fmtN, avatarColor, initial } from '../util.js';
 
-const PLATS = [['youtube', 'YouTube'], ['niconico', 'ニコニコ']];
-const WINS = [['24h', '24小时'], ['3d', '3天'], ['7d', '7天']];
+const PLATS = [['youtube', 'YouTube'], ['official', '官方'], ['niconico', 'ニコニコ']];
+const WINS = [['24h', '24小时'], ['3d', '3天'], ['7d', '7天'], ['30d', '30天']];
 const METRICS = [['total_score', '总热度'], ['total_views', '总播放'], ['video_count', '视频数']];
 const COLS = [
   ['channel', '频道', false],

@@ -62,9 +62,13 @@ def parse_start_time(text: Optional[str]) -> Optional[datetime]:
 
 
 def _build_time_filter() -> JsonFilterOperator:
-    """Build a 7-day rolling range filter for startTime."""
+    """Build a 30-day rolling range filter for startTime.
+
+    niconico finance content is sparse, so we pull 30 days to feed the 30d
+    window; the scorer/assign_windows still bucket each video by actual age.
+    """
     now = datetime.now(JST)
-    cutoff = now - timedelta(days=7)
+    cutoff = now - timedelta(days=30)
     return JsonFilterOperator({
         "type": "range",
         "field": "startTime",
@@ -97,8 +101,12 @@ def _search_single(keyword: str) -> list[dict]:
                 published = parse_start_time(item.get("startTime"))
                 content_id = item.get("contentId", "")
                 title = item.get("title", "")
-                # Filter out non-investment content
-                if not is_investment_related(title):
+                description = item.get("description", "") or ""
+                # Filter out non-investment content. niconico finance videos are
+                # sparse and often carry the finance terms in the description/tags
+                # rather than the title, so match on title OR description here
+                # (the Snapshot API already keyword-matched the query).
+                if not (is_investment_related(title) or is_investment_related(description)):
                     continue
                 videos.append({
                     "video_id": content_id,

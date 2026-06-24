@@ -64,8 +64,8 @@ def index():
 
 @app.get("/api/videos")
 def api_videos(
-    platform: str = Query("youtube", pattern="^(youtube|niconico)$"),
-    window: str = Query("24h", pattern="^(24h|3d|7d)$"),
+    platform: str = Query("youtube", pattern="^(youtube|niconico|official)$"),
+    window: str = Query("24h", pattern="^(24h|3d|7d|30d)$"),
     date: str | None = Query(None),
     limit: int = Query(300, ge=1, le=1000),
 ):
@@ -75,7 +75,7 @@ def api_videos(
 
 
 @app.get("/api/dates")
-def api_dates(platform: str = Query("youtube", pattern="^(youtube|niconico)$")):
+def api_dates(platform: str = Query("youtube", pattern="^(youtube|niconico|official)$")):
     """Get available dates for a platform."""
     dates = store.get_available_dates(platform)
     return {"dates": dates}
@@ -83,8 +83,8 @@ def api_dates(platform: str = Query("youtube", pattern="^(youtube|niconico)$")):
 
 @app.get("/api/channels")
 def api_channels(
-    platform: str = Query("youtube", pattern="^(youtube|niconico)$"),
-    window: str = Query("24h", pattern="^(24h|3d|7d)$"),
+    platform: str = Query("youtube", pattern="^(youtube|niconico|official)$"),
+    window: str = Query("24h", pattern="^(24h|3d|7d|30d)$"),
     date: str | None = Query(None),
 ):
     """Get channel-level aggregation for a platform + time window + date."""
