@@ -30,7 +30,7 @@ from version import __version__  # noqa: E402
 
 
 def run(cmd: list, **kw) -> None:
-    print("›", " ".join(map(str, cmd)))
+    print(">", " ".join(map(str, cmd)))
     subprocess.run(cmd, check=True, **kw)
 
 
@@ -57,14 +57,14 @@ def main() -> None:
     # (matches what web/update.py expects when extracting).
     zip_path = ROOT / f"HeatMap-{tag}.zip"
     zip_path.unlink(missing_ok=True)
-    print(f"zipping {dist} → {zip_path.name}")
+    print(f"zipping {dist} -> {zip_path.name}")
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
         for p in dist.rglob("*"):
             zf.write(p, p.relative_to(dist))
 
     notes = args.notes or f"HeatMap {tag}"
     run([_gh(), "release", "create", tag, str(zip_path), "-t", tag, "-n", notes], cwd=ROOT)
-    print(f"\n✓ Published {tag}. Existing clients will offer this update on next launch.")
+    print(f"\n[OK] Published {tag}. Existing clients will offer this update on next launch.")
 
 
 if __name__ == "__main__":
