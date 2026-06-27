@@ -1,4 +1,5 @@
 import { html } from '/static/vendor/preact-standalone.module.js';
+import { useUpdate } from '../update.js';
 
 const PHASE = { scraping: '采集', dedup: '去重', saving: '入库', done: '✓', failed: '✕' };
 const SHORT = { youtube: 'YouTube', official: '官方', niconico: 'ニコ' };
@@ -28,6 +29,7 @@ const TABS = [['rank', '热度榜'], ['channel', '频道分析'], ['lib', '素�
 
 export function TopBar({ view, onView, onRefresh, scrape, saveDir, onOpenDir, onPickDir, appVersion, onCheckUpdate }) {
   const dirName = (saveDir || '').split(/[\\/]/).filter(Boolean).pop() || saveDir || '—';
+  const upd = useUpdate().available;
   return html`
     <header class="topbar">
       <div class="logo">${LOGO} HeatMap</div>
@@ -38,7 +40,9 @@ export function TopBar({ view, onView, onRefresh, scrape, saveDir, onOpenDir, on
       </div>
       <div class="topbar-end">
         ${scrape.running ? html`<${ScrapeChip} scrape=${scrape} />` : null}
-        ${appVersion ? html`<button class="ver-chip" title="点击检查更新" onClick=${onCheckUpdate}>v${appVersion}</button>` : null}
+        ${appVersion ? (upd
+          ? html`<button class="ver-chip has-update" title=${`发现新版 v${upd.latest}，点击立即更新`} onClick=${onCheckUpdate}>⬆ 新版 v${upd.latest}</button>`
+          : html`<button class="ver-chip" title="点击检查更新" onClick=${onCheckUpdate}>v${appVersion}</button>`) : null}
         <button class=${'tb-btn' + (scrape.running ? ' refreshing' : '')} title="刷新数据"
                 onClick=${onRefresh}><span>⟳</span></button>
         <div class="path-chip">
