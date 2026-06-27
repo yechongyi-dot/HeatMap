@@ -52,11 +52,14 @@ export async function startScrape(onDone) {
   }
 }
 
-// Startup: attach to an in-flight scrape, else kick one off.
+// Startup: skip the network scrape if today's data already exists; attach to an
+// in-flight scrape if one is running; otherwise kick one off. Manual refresh
+// (startScrape) always forces a fresh scrape regardless.
 export async function autoScrape(onDone) {
   try {
-    const s = await api.get('/api/scrape/status');
-    if (s.running) { store.set({ running: true }); pollStatus(onDone); return; }
+    const c = await api.get('/api/scrape/check');
+    if (c.fresh) { onDone && onDone({ ok: true, fresh: true }); return; }
+    if (c.running) { store.set({ running: true }); pollStatus(onDone); return; }
   } catch {}
   startScrape(onDone);
 }

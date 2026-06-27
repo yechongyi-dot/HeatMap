@@ -11,6 +11,7 @@ import logging
 import queue
 import threading
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timezone, timedelta
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -377,10 +378,25 @@ def api_generate_thumbs_batch():
 
 
 # ── Scrape endpoint ──────────────────────────────────
+_JST = timezone(timedelta(hours=9))
+
+
 @app.get("/api/scrape/status")
 def api_scrape_status():
     """Check if scraping is in progress."""
     return {"running": _scrape_running}
+
+
+@app.get("/api/scrape/check")
+def api_scrape_check():
+    """Tell the frontend whether a fresh scrape is needed.
+
+    ``fresh`` is True when there's already data scraped *today* (JST), so the UI
+    can show it instantly instead of re-running a full network scrape on launch.
+    """
+    today = datetime.now(_JST).strftime("%Y-%m-%d")
+    latest = store.latest_scraped_date("youtube")
+    return {"running": _scrape_running, "fresh": latest == today, "latest": latest}
 
 
 def _run_scrape(job_id: str, q: queue.Queue) -> None:

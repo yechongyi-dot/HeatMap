@@ -233,6 +233,28 @@ def get_available_dates(platform: str) -> list[str]:
         return []
 
 
+def latest_scraped_date(platform: str = "youtube") -> Optional[str]:
+    """Most recent ``scraped_date`` for a platform across all windows.
+
+    Used to decide whether the app already has today's data (so it can show it
+    instantly instead of re-running a full network scrape on every launch).
+    ``None`` when there is no data yet.
+    """
+    SessionLocal = get_session()
+    try:
+        with SessionLocal() as session:
+            stmt = (
+                select(Video.scraped_date)
+                .where(Video.platform == platform)
+                .order_by(Video.scraped_date.desc())
+                .limit(1)
+            )
+            return session.execute(stmt).scalar_one_or_none()
+    except SQLAlchemyError as e:
+        logger.error("latest_scraped_date(%s): %s", platform, e)
+        return None
+
+
 def _row_to_dict(row: Video) -> dict:
     """Convert an ORM ``Video`` row to a plain dictionary for JSON serialisation."""
     return {
