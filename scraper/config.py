@@ -103,6 +103,13 @@ OFFICIAL_CHANNELS = [
     # 综合新闻 / 政治为主（含非财经内容，需按关键词过滤）
     {"name": "ロイター日本",             "channel_id": "UCpC6ZVYT8-SxVb9zIcPDOTA", "filter": True},
     {"name": "首相官邸",                 "channel_id": "UCogK43-0HpBQXPahOswXJ0g", "filter": True},
+    # 証券会社（专注财经，不过滤）
+    {"name": "マネックス証券",           "channel_id": "UCTuTMd_xFwEhapfhv6kFDig"},
+    {"name": "日経ポッドキャスト",       "channel_id": "UCa5GTH97HPtpXNuysWvWL_A"},
+    # 経済・ビジネス動画メディア（一般ビジネス内容も含むため要フィルタ）
+    {"name": "PIVOT",                    "channel_id": "UC8yHePe_RgUBE-waRWy6olw", "filter": True},
+    {"name": "ReHacQ−リハック−",         "channel_id": "UCG_oqDSlIYEspNpd2H4zWhw", "filter": True},
+    {"name": "テレ東BIZ",                "channel_id": "UCkKVQ_GNjd8FbAuT6xDcWgg", "filter": True},
 ]
 
 # Parallel channel-feed fetchers for the official scraper.
